@@ -31,7 +31,7 @@ const generateToken = async (userId) => {
 
 const registerUser = asyncHandler(async (req, res) => {
   const {
-    // referenceNumber,
+    referenceNumber,
     emailAddress,
     fullName,
     phoneNumber,
@@ -60,21 +60,21 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(400, "All fields are required");
   }
 
-  // const existingRefNoOwner = await User.findOne({ referenceNumber });
+  const existingRefNoOwner = await User.findOne({ referenceNumber });
 
-  // if (!existingRefNoOwner) {
-  //   throw new ApiError(400, "Please enter a valid Reference number");
-  // }
+  if (!existingRefNoOwner) {
+    throw new ApiError(400, "Please enter a valid Reference number");
+  }
 
-  // const userName = existingRefNoOwner.fullName;
+  const userName = existingRefNoOwner.fullName;
 
-  // const successResponse = new ApiResponse(
-  //   200,
-  //   userName,
-  //   "Reference number validated successfully"
-  // );
+  const successResponse = new ApiResponse(
+    200,
+    userName,
+    "Reference number validated successfully"
+  );
 
-  // res.status(200).json(successResponse);
+  res.status(200).json(successResponse);
 
   const existingUser = await User.findOne({
     $or: [{ emailAddress }, { phoneNumber }],
@@ -111,7 +111,7 @@ const registerUser = asyncHandler(async (req, res) => {
   const generatedPassword = generatePassword(fullName, phoneNumber);
 
   const user = await User.create({
-    // ...req.body,
+    ...req.body,
     fullName,
     userPhoto: userPhoto.url,
     companyLogo: companyLogo?.url || "",

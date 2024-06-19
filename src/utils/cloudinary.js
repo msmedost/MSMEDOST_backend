@@ -1,7 +1,7 @@
-import { v2 } from "cloudinary";
-import fs from "fs";
+import { v2 as cloudinary } from "cloudinary";
+import fs from "fs"
 
-v2.config({
+cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
@@ -10,11 +10,21 @@ v2.config({
 const uploadOnCloudinary = async(localFilePath)=>{
     try {
         if(!localFilePath) return null;
-        v2.uploader.upload(localFilePath, {
-            resource_type: "auto"
+
+        // this is for upload in main path in cloudinary
+        // const response = await cloudinary.uploader.upload(localFilePath, {
+        //     resource_type: "auto"
+        // })
+        const response = await cloudinary.uploader.upload(localFilePath, {
+            resource_type: "auto",
+            folder: "msme"
         })
+
+
+
         fs.unlinkSync(localFilePath)
         console.log("File removed succesfully from local path");
+        return response
     } catch (error) {
         fs.unlinkSync(localFilePath)
         return null;
