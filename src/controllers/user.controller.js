@@ -4,9 +4,51 @@ import { ApiError } from "../utils/ApiError.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { User } from "../models/user.model.js";
 
-const generateReferenceNumber = (phoneNumber) => {
+const generateYourReferenceNumber = (phoneNumber) => {
   return phoneNumber + "1";
 };
+
+const initializeDatabase = async () => {
+  try {
+    const existingUser = await User.findOne({ referenceNumber: "93311775951" });
+
+    if (!existingUser) {
+      await User.create({
+        ourServiceCity: "Kolkata",
+        zone: "North",
+        toliChapter: "Kolkata",
+        registerThroughReferenceNumber: "Not required",
+        yourReferenceNumber: "93311775951",
+        emailAddress: "support@msme.com",
+        password: "Not required",
+        fullName: "Not required",
+        phoneNumber: "Not required",
+        gender: "Not required",
+        bloodGroup: "Not required",
+        dateOfBirthDDMM: "Not required",
+        country: "Not required",
+        stateUT: "Not required",
+        city: "Not required",
+        postalPinCode: "Not required",
+        organizationName: "Not required",
+        businessCategory: "Not required",
+        businessDescription: "Not required",
+        officeAddress: "Not required",
+        userPhoto: "Not required",
+      });
+      console.log("Hardcoded reference number added successfully.");
+    } else {
+      console.log("Hardcoded reference number already exists in the database.");
+    }
+  } catch (error) {
+    console.error(
+      "Error initializing database with hardcoded reference number:",
+      error
+    );
+  }
+};
+
+initializeDatabase();
 
 const generatePassword = (fullName, phoneNumber) => {
   fullName = fullName.trim();
@@ -41,6 +83,7 @@ const registerUser = asyncHandler(async (req, res) => {
     businessCategory,
     businessDescription,
     officeAddress,
+    yourReferenceNumber
   } = req.body;
 
   if (
@@ -60,21 +103,21 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(400, "All fields are required");
   }
 
-  // const existingRefNoOwner = await User.findOne({ referenceNumber });
+  const existingRefNoOwner = await User.findOne({ yourReferenceNumber });
 
-  // if (!existingRefNoOwner) {
-  //   throw new ApiError(400, "Please enter a valid Reference number");
-  // }
+  if (!existingRefNoOwner) {
+    throw new ApiError(400, "Please enter a valid Reference number");
+  }
 
-  // const userName = existingRefNoOwner.fullName;
+  const userName = existingRefNoOwner.fullName;
 
-  // const successResponse = new ApiResponse(
-  //   200,
-  //   userName,
-  //   "Reference number validated successfully"
-  // );
+  const successResponse = new ApiResponse(
+    200,
+    userName,
+    "Reference number validated successfully"
+  );
 
-  // res.status(200).json(successResponse);
+  res.status(200).json(successResponse);
 
   const existingUser = await User.findOne({
     $or: [{ emailAddress }, { phoneNumber }],
@@ -84,7 +127,6 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(409, "Email or Phone number already registered");
   }
   const userPhotoLocalPath = req.files?.userPhoto[0]?.path;
-
 
   let companyLogoLocalPath;
 
@@ -107,7 +149,7 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Please upload your photo");
   }
 
-  const generatedReferenceNumber = generateReferenceNumber(phoneNumber);
+  const yourGeneratedReferenceNumber = generateYourReferenceNumber(phoneNumber);
   const generatedPassword = generatePassword(fullName, phoneNumber);
 
   const user = await User.create({
@@ -117,7 +159,7 @@ const registerUser = asyncHandler(async (req, res) => {
     companyLogo: companyLogo?.url || "",
     emailAddress,
     password: generatedPassword,
-    referenceNumber: generatedReferenceNumber,
+    yourReferenceNumber: yourGeneratedReferenceNumber,
   });
   const createdUser = await User.findById(user._id).select("-password");
 
@@ -129,7 +171,6 @@ const registerUser = asyncHandler(async (req, res) => {
     .status(201)
     .json(new ApiResponse(200, createdUser, "Registration Successful"));
 });
-
 
 const loginUser = asyncHandler(async (req, res) => {
   const { emailAddress, phoneNumber, password } = req.body;

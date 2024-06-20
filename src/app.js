@@ -15,7 +15,7 @@ app.use(cors({
 
 app.use(cookieParser())
 
-app.use("/users",userRouter)
+app.use("/api",userRouter)
 
 
 export { app }

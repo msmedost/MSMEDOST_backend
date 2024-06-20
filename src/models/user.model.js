@@ -17,9 +17,11 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
-    referenceNumber: {
+    registerThroughReferenceNumber: {
       type: String,
-      // required: true,
+    },
+    yourReferenceNumber: {
+      type: String,
     },
     emailAddress: {
       type: String,
