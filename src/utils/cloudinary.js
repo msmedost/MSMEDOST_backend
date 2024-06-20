@@ -10,14 +10,9 @@ cloudinary.config({
 const uploadOnCloudinary = async(localFilePath)=>{
     try {
         if(!localFilePath) return null;
-
-        // this is for upload in main path in cloudinary
-        // const response = await cloudinary.uploader.upload(localFilePath, {
-        //     resource_type: "auto"
-        // })
         const response = await cloudinary.uploader.upload(localFilePath, {
             resource_type: "auto",
-            folder: "msme"
+            folder: "MSMEDOST"
         })
 
 

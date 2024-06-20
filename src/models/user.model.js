@@ -147,7 +147,7 @@ const userSchema = new Schema(
     },
     userPhoto: {
       type: String,
-      // required: true,
+      required: true,
     },
     companyLogo: {
       type: String,
