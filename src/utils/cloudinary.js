@@ -17,13 +17,18 @@ const uploadOnCloudinary = async(localFilePath)=>{
 
 
 
-        fs.unlinkSync(localFilePath)
+        fs.unlinkSync(localFilePath, {
+            folder: "MSMEDOST"
+        })
         console.log("File removed succesfully from local path");
         return response
     } catch (error) {
-        fs.unlinkSync(localFilePath)
+        fs.unlinkSync(localFilePath, {
+            folder: "MSMEDOST"
+        })
         return null;
     }
 }
 
 export { uploadOnCloudinary }
+

@@ -8,52 +8,46 @@ const generateYourReferenceNumber = (phoneNumber) => {
   return phoneNumber + "1";
 };
 
-const initializeDatabase = async () => {
-  try {
-    const existingUser = await User.findOne({ referenceNumber: "93311775951" });
+// const initializeDatabase = async () => {
+//   try {
+//     const existingUser = await User.findOne({ referenceNumber: "93311775951" });
 
-    if (!existingUser) {
-      await User.create({
-        ourServiceCity: "Kolkata",
-        zone: "North",
-        toliChapter: "Kolkata",
-        registerThroughReferenceNumber: "Not required",
-        yourReferenceNumber: "93311775951",
-        emailAddress: "support@msme.com",
-        password: "Not required",
-        fullName: "Not required",
-        phoneNumber: "Not required",
-        gender: "Not required",
-        bloodGroup: "Not required",
-        dateOfBirthDDMM: "Not required",
-        country: "Not required",
-        stateUT: "Not required",
-        city: "Not required",
-        postalPinCode: "Not required",
-        organizationName: "Not required",
-        businessCategory: "Not required",
-        businessDescription: "Not required",
-        officeAddress: "Not required",
-        userPhoto: "Not required",
-      });
-      console.log("Hardcoded reference number added successfully.");
-    } else {
-      console.log("Hardcoded reference number already exists in the database.");
-    }
-  } catch (error) {
-    console.error(
-      "Error initializing database with hardcoded reference number:",
-      error
-    );
-  }
-};
+//     if (!existingUser) {
+//       await User.create({
+//         ourServiceCity: "Kolkata",
+//         zone: "North",
+//         toliChapter: "Kolkata",
+//         registerThroughReferenceNumber: "Not required",
+//         yourReferenceNumber: "93311775951",
+//         emailAddress: "support@msme.com",
+//         password: "Not required",
+//         fullName: "Not required",
+//         phoneNumber: "Not required",
+//         gender: "Not required",
+//         bloodGroup: "Not required",
+//         dateOfBirthDDMM: "Not required",
+//         country: "Not required",
+//         stateUT: "Not required",
+//         city: "Not required",
+//         postalPinCode: "Not required",
+//         organizationName: "Not required",
+//         businessCategory: "Not required",
+//         businessDescription: "Not required",
+//         officeAddress: "Not required",
+//         userPhoto: "Not required",
+//       });
+//       console.log("Hardcoded reference number added successfully.");
+//     }
+//   } catch (error) {
+//     throw new ApiError(400, "Date already exist")
+//   }
+// };
 
-initializeDatabase();
+// initializeDatabase();
 
 const generatePassword = (fullName, phoneNumber) => {
   fullName = fullName.trim();
-  // const firstThreeLetters = fullName.slice(0, 3).charAt(0).toUpperCase() + fullName.slice(1, 3).toLowerCase();
-  const firstThreeLetters =
+  const firstThreeLetters = fullName.slice(0, 3).charAt(0).toUpperCase() + fullName.slice(1, 3).toLowerCase();
     fullName.slice(0, 1).toUpperCase() + fullName.slice(1, 3).toLowerCase();
   const lastFourDigitPhoneNo = phoneNumber.slice(-4);
   const password = `${firstThreeLetters}@${lastFourDigitPhoneNo}`;
@@ -73,7 +67,6 @@ const generateToken = async (userId) => {
 
 const registerUser = asyncHandler(async (req, res) => {
   const {
-    // referenceNumber,
     emailAddress,
     fullName,
     phoneNumber,
@@ -88,7 +81,6 @@ const registerUser = asyncHandler(async (req, res) => {
 
   if (
     [
-      // referenceNumber,
       emailAddress,
       fullName,
       phoneNumber,
@@ -109,15 +101,15 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Please enter a valid Reference number");
   }
 
-  const userName = existingRefNoOwner.fullName;
+  // const userName = existingRefNoOwner.fullName;
 
-  const successResponse = new ApiResponse(
-    200,
-    userName,
-    "Reference number validated successfully"
-  );
+  // const successResponse = new ApiResponse(
+  //   200,
+  //   userName,
+  //   "Reference number validated successfully"
+  // );
 
-  res.status(200).json(successResponse);
+  // res.status(200).json(successResponse);
 
   const existingUser = await User.findOne({
     $or: [{ emailAddress }, { phoneNumber }],
@@ -174,6 +166,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
 const loginUser = asyncHandler(async (req, res) => {
   const { emailAddress, phoneNumber, password } = req.body;
+  console.log("login:", req.body);
   if (!emailAddress && !phoneNumber) {
     throw new ApiError(400, "Please Enter your Login Id");
   }
@@ -214,4 +207,4 @@ const loginUser = asyncHandler(async (req, res) => {
     );
 });
 
-export { registerUser, loginUser };
+export { registerUser, loginUser }

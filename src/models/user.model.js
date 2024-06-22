@@ -164,7 +164,7 @@ const userSchema = new Schema(
   })
 
   userSchema.methods.isPasswordCorrect = async function(){
-    return await bcrypt.compare(password. this.password)
+    return await bcrypt.compare(password, this.password)
   }
 
   userSchema.methods.generateAccessToken = function(){
@@ -180,3 +180,6 @@ const userSchema = new Schema(
   }
 
 export const User = mongoose.model("User", userSchema);
+
+
+

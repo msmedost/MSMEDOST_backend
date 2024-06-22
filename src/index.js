@@ -11,3 +11,5 @@ connectDB().then(()=>{
         console.log("THE PORT IS RUNNING ON:", process.env.PORT);
     })
 })
+
+
