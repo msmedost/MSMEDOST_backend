@@ -207,4 +207,13 @@ const loginUser = asyncHandler(async (req, res) => {
     );
 });
 
-export { registerUser, loginUser }
+const allUser = asyncHandler(async(req, res) => {
+  try {
+    const users = await User.find().select('-password'); 
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+})
+
+export { registerUser, loginUser, allUser }
