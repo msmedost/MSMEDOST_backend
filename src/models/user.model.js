@@ -163,12 +163,21 @@ const userSchema = new Schema(
     this.password = await bcrypt.hash(this.password, 10)
   })
 
-  userSchema.methods.isPasswordCorrect = async function(){
-    return await bcrypt.compare(password, this.password)
-  }
+  // userSchema.methods.isPasswordCorrect = async function(){
+  //   return await bcrypt.compare(password, this.password)
+  // }
 
+  userSchema.methods.isPasswordCorrect = async function(password) {
+    try {
+      return await bcrypt.compare(password, this.password);
+    } catch (error) {
+      console.log("Error hai :",error);
+    }
+  };
+
+  
   userSchema.methods.generateAccessToken = function(){
-    jwt.sign(
+    return jwt.sign(
       {
         _id: this._id,
       },
