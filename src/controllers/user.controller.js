@@ -207,13 +207,17 @@ const loginUser = asyncHandler(async (req, res) => {
     );
 });
 
-const allUser = asyncHandler(async(req, res) => {
+
+
+const allUser = asyncHandler(async (req, res) => {
   try {
-    const users = await User.find().select('-password'); 
+    const users = await User.find().select('-password');
+    res.status(200).json(users); // Send the fetched users as JSON response
   } catch (error) {
     console.error('Error fetching users:', error);
     res.status(500).json({ message: 'Server Error' });
   }
-})
+});
+
 
 export { registerUser, loginUser, allUser }
