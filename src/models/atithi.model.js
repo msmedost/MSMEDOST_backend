@@ -25,10 +25,13 @@ const atithiSchema = new Schema(
     pincode: {
         type: String,
     },
+    businessCategory: {
+        type: String,
+    },
     city: {
         type: String,
     },
-    recentPhoto: {
+    userPhoto: {
         type: String,
     },
     introducerName: {
